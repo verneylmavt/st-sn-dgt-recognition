@@ -1,0 +1,8 @@
+streamlit
+streamlit-extras
+pillow
+pandas
+torch
+torchvision
+onnx
+onnxruntime
