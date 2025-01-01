@@ -31,7 +31,7 @@ Ensure you have the following installed:
 
    ```bash
    git clone https://github.com/verneylmavt/st-sn-dgt-recognition.git
-   <!-- cd st-sn-dgt-recognition
+   cd st-sn-dgt-recognition
    ```
 
 2. Install the required dependencies:
