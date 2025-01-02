@@ -1,6 +1,6 @@
 # 🔢 Single Digit Recognition Model Collections
 
-This repository contains machine learning models of Single Digit Recognition, designed to be deployed using ONNX and utilized in a Streamlit-based web application. The app provides an interactive interface for performing various tasks using neural network architectures. [Check here to see other ML tasks](https://github.com/verneylmavt/ml-model).
+This repository contains machine learning models of Single Digit Recognition, designed to be deployed using ONNX and utilized in a Streamlit-based web application. The app provides an interactive interface for performing this task using neural network architectures. [Check here to see other ML tasks](https://github.com/verneylmavt/ml-model).
 
 For more information about the training process, please check the `.ipynb` files in the `training` folder.
 
