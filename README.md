@@ -45,13 +45,12 @@ Ensure you have the following installed:
    streamlit run app.py
    ```
 
-## Acknowledgement
+## ⚖️ Acknowledgement
 
 I acknowledge the use of the **MNIST** dataset provided by **Yann LeCun, Corinna Cortes, and Christopher J.C. Burges**. This dataset has been instrumental in conducting the research and developing this project.
 
 - **Dataset Name**: MNIST (Modified National Institute of Standards and Technology) database
 - **Source**: [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/)
-- **License**: [Specific licensing information may be required; please refer to the dataset's source for details.]
 - **Description**: This dataset contains 70,000 grayscale images of handwritten digits (0-9), each 28x28 pixels in size. It is commonly used for training and testing in the field of machine learning and has become a benchmark for evaluating image processing systems.
 
 I deeply appreciate the efforts of Yann LeCun, Corinna Cortes, and Christopher J.C. Burges in making this dataset available.
