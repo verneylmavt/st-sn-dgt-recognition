@@ -45,24 +45,13 @@ Ensure you have the following installed:
    streamlit run app.py
    ```
 
-<!-- Alternatively you can run `demo.ipynb` for a minimal setup to quickly test the model (implemented w/ `ipywidgets`). -->
+## Acknowledgement
 
-<!-- ### Notes
+I acknowledge the use of the **MNIST** dataset provided by **Yann LeCun, Corinna Cortes, and Christopher J.C. Burges**. This dataset has been instrumental in conducting the research and developing this project.
 
-- Ensure all required model files (ONNX models, vocabulary files, etc.) are placed in the appropriate directories as referenced in the app.
-- If you encounter issues, check the error logs and ensure all dependencies are correctly installed. -->
-<!--
+- **Dataset Name**: MNIST (Modified National Institute of Standards and Technology) database
+- **Source**: [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/)
+- **License**: [Specific licensing information may be required; please refer to the dataset's source for details.]
+- **Description**: This dataset contains 70,000 grayscale images of handwritten digits (0-9), each 28x28 pixels in size. It is commonly used for training and testing in the field of machine learning and has become a benchmark for evaluating image processing systems.
 
-## Features
-
-- Multiple neural network models for sentiment analysis, including Bi-RNN, Text CNN, and Hybrid CNN-RNN with Attention Mechanism.
-- Interactive model selection and sentiment analysis interface.
-- Transparency with preprocessing steps, parameters, and architecture details displayed.
-
-## Contributions
-
-Contributions and suggestions are welcome! Feel free to open an issue or submit a pull request for improvements or additional features.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details. -->
+I deeply appreciate the efforts of Yann LeCun, Corinna Cortes, and Christopher J.C. Burges in making this dataset available.
