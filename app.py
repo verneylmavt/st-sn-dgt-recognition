@@ -192,7 +192,7 @@ def main():
     
     st.subheader(model_info[model]["subheader"])
     
-    with st.form(key="dgt_recognition_form"):
+    with st.form(key="sn_dgt_recognition_form"):
         # user_input = st.text_input("Enter Text Here:")
         st.write("Draw Digit Here:")
         canvas_result = st_canvas(
