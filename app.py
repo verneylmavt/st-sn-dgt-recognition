@@ -181,6 +181,9 @@ def predict_digit(ort_session, pil_image):
 # Page UI
 # ----------------------
 def main():
+    st.set_page_config(page_title="Single Digit Recognition"
+                    # layout="wide"
+                    )
     st.title("Single Digit Recognition")
     
     model_names = list(model_info.keys())
