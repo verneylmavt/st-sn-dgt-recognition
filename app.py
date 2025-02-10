@@ -4,7 +4,7 @@ import pandas as pd
 import streamlit as st
 from streamlit_extras.chart_container import chart_container
 from streamlit_extras.mention import mention
-from streamlit_extras.echo_expander import echo_expander
+# from streamlit_extras.echo_expander import echo_expander
 from streamlit_drawable_canvas import st_canvas
 from PIL import Image
 import onnxruntime as ort
@@ -17,95 +17,98 @@ from torchvision import transforms
 # ----------------------
 # Model Information
 # ----------------------
-model_info = {
-    "rnet-cnn": {
-        "subheader": "Model: ResNet CNN",
-        "pre_processing": """
-Dataset = Modified National Institute of Standards and Technology (MNIST)
-        """,
-        "parameters": """
-Batch Size = 128
+@st.cache_resource
+def load_model_info():
+    model_info = {
+        "rnet-cnn": {
+            "subheader": "Model: ResNet CNN",
+            "pre_processing": """
+    Dataset = Modified National Institute of Standards and Technology (MNIST)
+            """,
+            "parameters": """
+    Batch Size = 128
 
-Epochs = 15
-Learning Rate = 0.001
-Learning Rate Scheduler = StepLR
-Loss Function = CrossEntropyLoss
-Optimizer = AdamW
-Weight Decay = 0.0001
-        """,
-        "model_code": """
-class Block(nn.Module):
-    def __init__(self, in_channels, out_channels, stride=1, downsample=None):
-        super(Block, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, 
-                               stride=stride, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(out_channels)
-        self.relu = nn.ReLU(inplace=True)
-        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, 
-                               stride=1, padding=1, bias=False)
-        self.bn2 = nn.BatchNorm2d(out_channels)
-        self.downsample = downsample
+    Epochs = 15
+    Learning Rate = 0.001
+    Learning Rate Scheduler = StepLR
+    Loss Function = CrossEntropyLoss
+    Optimizer = AdamW
+    Weight Decay = 0.0001
+            """,
+            "model_code": """
+    class Block(nn.Module):
+        def __init__(self, in_channels, out_channels, stride=1, downsample=None):
+            super(Block, self).__init__()
+            self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, 
+                                stride=stride, padding=1, bias=False)
+            self.bn1 = nn.BatchNorm2d(out_channels)
+            self.relu = nn.ReLU(inplace=True)
+            self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, 
+                                stride=1, padding=1, bias=False)
+            self.bn2 = nn.BatchNorm2d(out_channels)
+            self.downsample = downsample
 
-    def forward(self, x):
-        identity = x
-        out = self.conv1(x)
-        out = self.bn1(out)
-        out = self.relu(out)
-        out = self.conv2(out)
-        out = self.bn2(out)
-        if self.downsample:
-            identity = self.downsample(x)
-        out += identity
-        out = self.relu(out)
-        return out
+        def forward(self, x):
+            identity = x
+            out = self.conv1(x)
+            out = self.bn1(out)
+            out = self.relu(out)
+            out = self.conv2(out)
+            out = self.bn2(out)
+            if self.downsample:
+                identity = self.downsample(x)
+            out += identity
+            out = self.relu(out)
+            return out
 
 
-class Model(nn.Module):
-    def __init__(self, num_classes=10):
-        super(Model, self).__init__()
-        self.layer1 = nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(32),
-            nn.ReLU(inplace=True)
-        )
-        self.layer2 = Block(32, 32)
-        self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.layer3 = nn.Sequential(
-            nn.Conv2d(32, 64, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True)
-        )
-        self.layer4 = Block(64, 64)
-        self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.layer5 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(128),
-            nn.ReLU(inplace=True)
-        )
-        self.layer6 = Block(128, 128)
-        self.pool3 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.global_avg_pool = nn.AdaptiveAvgPool2d((1, 1))
-        self.dropout = nn.Dropout(0.5)
-        self.fc = nn.Linear(128, num_classes)
+    class Model(nn.Module):
+        def __init__(self, num_classes=10):
+            super(Model, self).__init__()
+            self.layer1 = nn.Sequential(
+                nn.Conv2d(1, 32, kernel_size=3, padding=1, bias=False),
+                nn.BatchNorm2d(32),
+                nn.ReLU(inplace=True)
+            )
+            self.layer2 = Block(32, 32)
+            self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
+            self.layer3 = nn.Sequential(
+                nn.Conv2d(32, 64, kernel_size=3, padding=1, bias=False),
+                nn.BatchNorm2d(64),
+                nn.ReLU(inplace=True)
+            )
+            self.layer4 = Block(64, 64)
+            self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
+            self.layer5 = nn.Sequential(
+                nn.Conv2d(64, 128, kernel_size=3, padding=1, bias=False),
+                nn.BatchNorm2d(128),
+                nn.ReLU(inplace=True)
+            )
+            self.layer6 = Block(128, 128)
+            self.pool3 = nn.MaxPool2d(kernel_size=2, stride=2)
+            self.global_avg_pool = nn.AdaptiveAvgPool2d((1, 1))
+            self.dropout = nn.Dropout(0.5)
+            self.fc = nn.Linear(128, num_classes)
 
-    def forward(self, x):
-        out = self.layer1(x)
-        out = self.layer2(out)
-        out = self.pool1(out)
-        out = self.layer3(out)
-        out = self.layer4(out)
-        out = self.pool2(out)
-        out = self.layer5(out)
-        out = self.layer6(out)
-        out = self.pool3(out)
-        out = self.global_avg_pool(out)
-        out = out.view(out.size(0), -1)
-        out = self.dropout(out)
-        out = self.fc(out)
-        return out
-        """
+        def forward(self, x):
+            out = self.layer1(x)
+            out = self.layer2(out)
+            out = self.pool1(out)
+            out = self.layer3(out)
+            out = self.layer4(out)
+            out = self.pool2(out)
+            out = self.layer5(out)
+            out = self.layer6(out)
+            out = self.pool3(out)
+            out = self.global_avg_pool(out)
+            out = out.view(out.size(0), -1)
+            out = self.dropout(out)
+            out = self.fc(out)
+            return out
+            """
+        }
     }
-}
+    return model_info
 
 # ----------------------
 # Loading Function
@@ -186,6 +189,7 @@ def main():
                     )
     st.title("Single Digit Recognition")
     
+    model_info = load_model_info()
     model_names = list(model_info.keys())
     model = st.selectbox("Select a Model", model_names)
     st.divider()
@@ -247,6 +251,7 @@ def main():
     else: pass
     
     st.subheader("""Model""")
+    from streamlit_extras.echo_expander import echo_expander
     with echo_expander(code_location="below", label="Code"):
         import torch
         import torch.nn as nn
