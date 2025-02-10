@@ -5,7 +5,7 @@ import streamlit as st
 from streamlit_extras.chart_container import chart_container
 from streamlit_extras.mention import mention
 # from streamlit_extras.echo_expander import echo_expander
-from streamlit_drawable_canvas import st_canvas
+# from streamlit_drawable_canvas import st_canvas
 from PIL import Image
 import onnxruntime as ort
 from torchvision import transforms
@@ -202,6 +202,7 @@ def main():
     with st.form(key="sn_dgt_recognition_form"):
         # user_input = st.text_input("Enter Text Here:")
         st.write("Draw Digit Here:")
+        from streamlit_drawable_canvas import st_canvas
         canvas_result = st_canvas(
             fill_color="#eee",
             stroke_width=17,
